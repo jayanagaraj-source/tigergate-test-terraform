@@ -35,3 +35,21 @@ terraform init -backend=false && terraform validate
 trivy config .            # IaC misconfigurations
 trivy fs --scanners secret .   # hard-coded credentials
 ```
+
+## Go SAST fixture
+
+`sast-go/vulnerable.go` is a compilable Go module with deliberate SAST issues for
+source-code scanners (gosec / semgrep / TigerGate SAST):
+
+| Issue | gosec rule | CWE |
+|-------|-----------|-----|
+| Hard-coded credentials      | G101      | CWE-798 |
+| SQL injection (fmt.Sprintf) | G201      | CWE-89  |
+| OS command injection        | G204      | CWE-78  |
+| Path traversal              | G304      | CWE-22  |
+| SSRF (variable URL)         | G107      | CWE-918 |
+| Weak hash (MD5)             | G401/G501 | CWE-327 |
+| TLS InsecureSkipVerify      | G402      | CWE-295 |
+| Insecure randomness         | G404      | CWE-338 |
+
+Verified: `go build ./...` passes; gosec reports 8 issues, semgrep reports 7.
