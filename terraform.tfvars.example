@@ -1,0 +1,3 @@
+application_name = "tigergate-test-terraform"
+environment      = "test"
+owner            = "platform"
